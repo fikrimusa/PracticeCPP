@@ -4,6 +4,8 @@ project(PracticeC- VERSION 0.1.0 LANGUAGES C CXX)
 include(CTest)
 enable_testing()
 
-add_executable(PracticeC- MyCppCode.cpp)
+add_executable(Executable1 CMakeTestFolder/MyCppCode.cpp)
+add_executable(Executable2 CMakeTestFolder2/2test.cpp)
 
-set_property(TARGET PracticeC- PROPERTY CXX_STANDARD 17)
+set_property(TARGET Executable1 PROPERTY CXX_STANDARD 17)
+set_property(TARGET Executable2 PROPERTY CXX_STANDARD 17)
