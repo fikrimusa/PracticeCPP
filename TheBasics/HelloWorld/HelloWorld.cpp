@@ -1,5 +1,14 @@
-#include <iostream>
+#include<iostream>
+#include<vector>
+#include<string>
 
-int main(int argc, char** argv){
-    std::cout << "Hello World!\n";
+using namespace std;
+
+int main(){
+    vector<string> msg {"Yes", "You", "Did", "It!"};
+
+    for(const string& word : msg){
+        cout << word << " ";
+    }
+    cout << endl;
 }
