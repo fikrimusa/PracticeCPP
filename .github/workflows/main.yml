@@ -3,7 +3,8 @@ name: CMake Build Matrix
 on: [push, pull_request]
 
 env:
-  CMAKE_VERSION: "3.30.1"
+  CMAKE_VERSION: "3.29.6"
+  NINJA_VERSION: "1.12.1"
   BUILD_TYPE: Release
   CCACHE_VERSION: "4.10"
 
@@ -12,7 +13,7 @@ jobs:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
     outputs:
-      tag: ${{ steps.git.outputs.tag }}
+        tag: ${{ steps.git.outputs.tag }}
     strategy:
       fail-fast: false
       matrix:
@@ -51,23 +52,31 @@ jobs:
             file(APPEND "$ENV{GITHUB_OUTPUT}" "tag=${{github.run_id}}\n")
         endif()
 
-    - name: Download CMake
+    - name: Download Ninja and CMake
       shell: cmake -P {0}
       run: |
         set(cmake_version $ENV{CMAKE_VERSION})
+        set(ninja_version $ENV{NINJA_VERSION})
 
         message(STATUS "Using host CMake version: ${CMAKE_VERSION}")
 
         if ("${{ runner.os }}" STREQUAL "Windows")
+          set(ninja_suffix "win.zip")
           set(cmake_suffix "windows-x86_64.zip")
           set(cmake_dir "cmake-${cmake_version}-windows-x86_64/bin")
         elseif ("${{ runner.os }}" STREQUAL "Linux")
+          set(ninja_suffix "linux.zip")
           set(cmake_suffix "linux-x86_64.tar.gz")
           set(cmake_dir "cmake-${cmake_version}-linux-x86_64/bin")
         elseif ("${{ runner.os }}" STREQUAL "macOS")
+          set(ninja_suffix "mac.zip")
           set(cmake_suffix "macos-universal.tar.gz")
           set(cmake_dir "cmake-${cmake_version}-macos-universal/CMake.app/Contents/bin")
         endif()
+
+        set(ninja_url "https://github.com/ninja-build/ninja/releases/download/v${ninja_version}/ninja-${ninja_suffix}")
+        file(DOWNLOAD "${ninja_url}" ./ninja.zip SHOW_PROGRESS)
+        execute_process(COMMAND ${CMAKE_COMMAND} -E tar xvf ./ninja.zip)
 
         set(cmake_url "https://github.com/Kitware/CMake/releases/download/v${cmake_version}/cmake-${cmake_version}-${cmake_suffix}")
         file(DOWNLOAD "${cmake_url}" ./cmake.zip SHOW_PROGRESS)
@@ -82,7 +91,10 @@ jobs:
         file(APPEND "$ENV{GITHUB_PATH}" "$ENV{GITHUB_WORKSPACE}${path_separator}${cmake_dir}")
 
         if (NOT "${{ runner.os }}" STREQUAL "Windows")
-          execute_process(COMMAND chmod +x ${cmake_dir}/cmake)
+          execute_process(
+            COMMAND chmod +x ninja
+            COMMAND chmod +x ${cmake_dir}/cmake
+          )
         endif()
 
     - name: Download ccache
@@ -161,8 +173,8 @@ jobs:
             -S .
             -B build
             -D CMAKE_BUILD_TYPE=$ENV{BUILD_TYPE}
-            -G "MinGW Makefiles"
-            -D CMAKE_CXX_STANDARD=20
+            -G Ninja
+            -D CMAKE_MAKE_PROGRAM=ninja
             -D CMAKE_C_COMPILER_LAUNCHER=ccache
             -D CMAKE_CXX_COMPILER_LAUNCHER=ccache
           RESULT_VARIABLE result
@@ -171,11 +183,24 @@ jobs:
           message(FATAL_ERROR "Bad exit status")
         endif()
 
+
     - name: Build
       shell: cmake -P {0}
       run: |
-        set(ENV{CCACHE_BASEDIR} "$ENV{GITHUB_WORKSPACE}")
-        set(ENV{CCACHE_DIR} "$ENV{GITHUB_WORKSPACE}/.ccache")
+        set(ENV{NINJA_STATUS} "[%f/%t %o/sec] ")
+
+        if ("${{ runner.os }}" STREQUAL "Windows" AND NOT "x${{ matrix.config.environment_script }}" STREQUAL "x")
+          file(STRINGS environment_script_output.txt output_lines)
+          foreach(line IN LISTS output_lines)
+            if (line MATCHES "^([a-zA-Z0-9_-]+)=(.*)$")
+              set(ENV{${CMAKE_MATCH_1}} "${CMAKE_MATCH_2}")
+            endif()
+          endforeach()
+        endif()
+
+        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+        set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+        set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
         set(ENV{CCACHE_COMPRESS} "true")
         set(ENV{CCACHE_COMPRESSLEVEL} "6")
         set(ENV{CCACHE_MAXSIZE} "400M")
@@ -203,8 +228,9 @@ jobs:
     - name: ccache statistics
       shell: cmake -P {0}
       run: |
-        set(ENV{CCACHE_BASEDIR} "$ENV{GITHUB_WORKSPACE}")
-        set(ENV{CCACHE_DIR} "$ENV{GITHUB_WORKSPACE}/.ccache")
+        file(TO_CMAKE_PATH "$ENV{GITHUB_WORKSPACE}" ccache_basedir)
+        set(ENV{CCACHE_BASEDIR} "${ccache_basedir}")
+        set(ENV{CCACHE_DIR} "${ccache_basedir}/.ccache")
 
         execute_process(COMMAND ccache -s)
 
@@ -220,4 +246,54 @@ jobs:
           COMMAND ctest -j ${N}
           WORKING_DIRECTORY build
           RESULT_VARIABLE result
-          OUTPUT_VARIABLE
+          OUTPUT_VARIABLE output
+          ERROR_VARIABLE output
+          ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE
+        )
+        if (NOT result EQUAL 0)
+          string(REGEX MATCH "[0-9]+% tests.*[0-9.]+ sec.*$" test_results "${output}")
+          string(REPLACE "\n" "%0A" test_results "${test_results}")
+          message("::error::${test_results}")
+          message(FATAL_ERROR "Running tests failed!")
+        endif()
+
+    - name: Install Strip
+      run: cmake --install build --prefix instdir --strip
+
+    - name: Pack
+      working-directory: instdir
+      run: cmake -E tar cfv ../${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z --format=7zip .
+
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with:
+        path: ./${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+        name: ${{ matrix.config.artifact }}-${{ steps.git.outputs.tag }}.7z
+
+
+  release:
+    if: contains(github.ref, 'tags/v')
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: release-with-dirs
+
+    - name: Fixup artifacts
+      run: |
+        mkdir release
+        mv release-with-dirs/*/* release/
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ needs.build.outputs.tag }}
+        files: release/*
+        draft: false
+        prerelease: false
