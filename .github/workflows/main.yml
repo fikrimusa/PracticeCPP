@@ -1,0 +1,41 @@
+name: CPP CI
+
+on: [push, pull_request]
+
+jobs:
+  Build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - name: "Windows/Static/X86/Release"
+            os: windows-2019
+            config: Release
+            args: -G "Visual Studio 16 2019" -A Win32
+          - name: "Windows/Static/X64/Release"
+            os: windows-2019
+            config: Release
+            args: -G "Visual Studio 16 2019" -A x64
+          - name: "Ubuntu/18.04/Static/X64/Release"
+            os: ubuntu-latest
+            config: Release
+            cmake_extra_args: "-DCMAKE_C_COMPILER=/usr/bin/gcc-11 -DCMAKE_CXX_COMPILER=/usr/bin/g++-11"
+          - name: "MacOSX/Static/X64/Release"
+            os: macos-10.15
+            config: Release
+            args: ""
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Work Dir
+        run: mkdir build
+      - name: Configure
+        working-directory: ./build
+        run: cmake .. ${{ matrix.config.args }} ${{ matrix.config.cmake_extra_args }} -DCMAKE_BUILD_TYPE=${{ matrix.config.config }}
+      - name: Build
+        working-directory: ./build
+        run: cmake --build . -j --config ${{ matrix.config.config }}
+      - name: Test
+        working-directory: ./build
+        run: ctest -j $(nproc) -C ${{ matrix.config.config }}  # Adjust the number of parallel jobs if needed
