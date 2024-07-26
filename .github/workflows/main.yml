@@ -1,9 +1,9 @@
-name: Test
+name: CPP Configure and Build Test
 on:
   push:
 jobs:
   test-project:
-    name: Test Project
+    name: PracticeCPP
     runs-on: windows-latest
     steps:
       - name: Checkout
