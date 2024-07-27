@@ -15,7 +15,4 @@ set_property(TARGET Loops2 PROPERTY CXX_STANDARD 20)
 set_property(TARGET Loops3 PROPERTY CXX_STANDARD 20)
 set_property(TARGET Loops4 PROPERTY CXX_STANDARD 20)
 set_property(TARGET SE PROPERTY CXX_STANDARD 20)
-<<<<<<< HEAD:CmakeLists.txt
 set_property(TARGET Constructor PROPERTY CXX_STANDARD 20)
-=======
->>>>>>> 364534a6dfbb472fb5270fdbfac12181a05e786e:CMakeLists.txt
