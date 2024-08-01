@@ -2,7 +2,8 @@
     "cmake.generator": "MinGW Makefiles",
     "files.associations": {
       "*.cpp": "cpp",
-      "format": "cpp"
+      "format": "cpp",
+      "string_view": "cpp"
     }
   }
   

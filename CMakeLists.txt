@@ -60,6 +60,9 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/03_LambdaExpressions/lambda-predicate.cpp
     AdvancedCPP/03_LambdaExpressions/jump.cpp
     AdvancedCPP/04_ConstraintsAndConcepts/constraints.cpp
+    AdvancedCPP/05_OptionalsAndVariants/any.cpp
+    AdvancedCPP/05_OptionalsAndVariants/optional.cpp
+    AdvancedCPP/05_OptionalsAndVariants/variant.cpp
 )
 
 # Create executables for TheBasics
