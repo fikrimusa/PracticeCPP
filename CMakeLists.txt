@@ -55,6 +55,10 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/02_MoveSemantics/container-02.cpp
     AdvancedCPP/02_MoveSemantics/container-03.cpp
     AdvancedCPP/02_MoveSemantics/vector-test.cpp
+    AdvancedCPP/03_LambdaExpressions/lambda-hello.cpp
+    AdvancedCPP/03_LambdaExpressions/lambda-capture.cpp
+    AdvancedCPP/03_LambdaExpressions/lambda-predicate.cpp
+    AdvancedCPP/03_LambdaExpressions/jump.cpp
 )
 
 # Create executables for TheBasics
