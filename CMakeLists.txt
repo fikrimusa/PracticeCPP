@@ -59,6 +59,7 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/03_LambdaExpressions/lambda-capture.cpp
     AdvancedCPP/03_LambdaExpressions/lambda-predicate.cpp
     AdvancedCPP/03_LambdaExpressions/jump.cpp
+    AdvancedCPP/04_ConstraintsAndConcepts/constraints.cpp
 )
 
 # Create executables for TheBasics
