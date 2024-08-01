@@ -51,6 +51,10 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/01_OperatorOverload/rational2.cpp
     AdvancedCPP/01_OperatorOverload/incr-decr.cpp
     AdvancedCPP/01_OperatorOverload/functor.cpp
+    AdvancedCPP/02_MoveSemantics/container.cpp
+    AdvancedCPP/02_MoveSemantics/container-02.cpp
+    AdvancedCPP/02_MoveSemantics/container-03.cpp
+    AdvancedCPP/02_MoveSemantics/vector-test.cpp
 )
 
 # Create executables for TheBasics
