@@ -45,6 +45,14 @@ set(DESIGNPATTERN_SOURCES
     DesignPattern/07_Proxy/confidential.cpp
 )
 
+# Source files for AdvancedCPP
+set(ADVANCECPP_SOURCES
+    AdvancedCPP/01_OperatorOverload/rational.cpp
+    AdvancedCPP/01_OperatorOverload/rational2.cpp
+    AdvancedCPP/01_OperatorOverload/incr-decr.cpp
+    AdvancedCPP/01_OperatorOverload/functor.cpp
+)
+
 # Create executables for TheBasics
 foreach(source_file IN LISTS THEBASICS_SOURCES)
     get_filename_component(target_name ${source_file} NAME_WE)
@@ -55,4 +63,10 @@ endforeach()
 foreach(source_file IN LISTS DESIGNPATTERN_SOURCES)
     get_filename_component(target_name ${source_file} NAME_WE)
     add_executable(${target_name}_DesignPattern ${source_file})
+endforeach()
+
+# Create executables for AdvancedCPP
+foreach(source_file IN LISTS ADVANCECPP_SOURCES)
+    get_filename_component(target_name ${source_file} NAME_WE)
+    add_executable(${target_name}_AdvancedCPP ${source_file})
 endforeach()
