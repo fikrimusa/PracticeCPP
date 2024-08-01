@@ -63,6 +63,13 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/05_OptionalsAndVariants/any.cpp
     AdvancedCPP/05_OptionalsAndVariants/optional.cpp
     AdvancedCPP/05_OptionalsAndVariants/variant.cpp
+    AdvancedCPP/06_Concurrency/async.cpp
+    AdvancedCPP/06_Concurrency/atomic.cpp
+    AdvancedCPP/06_Concurrency/mutex.cpp
+    AdvancedCPP/06_Concurrency/producer-consumer.cpp
+    AdvancedCPP/06_Concurrency/promise.cpp
+    AdvancedCPP/06_Concurrency/sleep.cpp
+    AdvancedCPP/06_Concurrency/thread.cpp
 )
 
 # Create executables for TheBasics
