@@ -1,69 +1,58 @@
 cmake_minimum_required(VERSION 3.30.1)
 project(PracticeCPP VERSION 0.1.0 LANGUAGES C CXX)
 
-add_executable(HelloWorld TheBasics/01_HelloWorld/HelloWorld.cpp)
-add_executable(Loops1 TheBasics/02_Loops/for.cpp)
-add_executable(Loops2 TheBasics/02_Loops/range-for.cpp)
-add_executable(Loops3 TheBasics/02_Loops/switch.cpp)
-add_executable(Loops4 TheBasics/02_Loops/while.cpp)
-add_executable(SE TheBasics/03_StatementAndExpressions/SE.cpp)
-add_executable(Constructor TheBasics/04_Constructor/constructor.cpp)
-add_executable(Pointer TheBasics/05_Pointer/pointer-incr.cpp)
-add_executable(Class1 TheBasics/06_Class/class.cpp)
-add_executable(Class2 TheBasics/06_Class/struct-class.cpp)
-add_executable(Class3 TheBasics/06_Class/rational.cpp)
-add_executable(Class4 TheBasics/06_Class/accessors.cpp)
-add_executable(Template1 TheBasics/07_Template/template-class.cpp)
-add_executable(Template2 TheBasics/07_Template/template-function.cpp)
-add_executable(STL1 TheBasics/08_STL/vector.cpp)
-add_executable(STL2 TheBasics/08_STL/string.cpp)
-add_executable(STL3 TheBasics/08_STL/iostream-file.cpp)
-add_executable(STL4 TheBasics/08_STL/iostream-formatting.cpp)
+# Set C++ standard for all targets
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(Design1 DesignPattern/01_Adapter/objectAdapter.cpp)
-add_executable(Design2 DesignPattern/01_Adapter/classAdapter.cpp)
-add_executable(Design3 DesignPattern/01_Adapter/cloudStorage.cpp)
-add_executable(Design4 DesignPattern/02_Bridge/bridgeRefactor.cpp)
-add_executable(Design5 DesignPattern/02_Bridge/vehiclesEngines.cpp)
-add_executable(Design6 DesignPattern/03_Composite/boxesProducts.cpp)
-add_executable(Design7 DesignPattern/04_Decorator/computershop.cpp)
-add_executable(Design8 DesignPattern/04_Decorator/pizza.cpp)
-add_executable(Design9 DesignPattern/05_Facade/hotelReservation.cpp)
-add_executable(Design10 DesignPattern/05_Facade/weatherAPI.cpp)
-add_executable(Design11 DesignPattern/06_Flyweight/sprites.cpp)
-add_executable(Design12 DesignPattern/06_Flyweight/textEditor.cpp)
-add_executable(Design13 DesignPattern/07_Proxy/readConfig.cpp)
-add_executable(Design14 DesignPattern/07_Proxy/confidential.cpp)
+# Source files for TheBasics
+set(THEBASICS_SOURCES
+    TheBasics/01_HelloWorld/HelloWorld.cpp
+    TheBasics/02_Loops/for.cpp
+    TheBasics/02_Loops/range-for.cpp
+    TheBasics/02_Loops/switch.cpp
+    TheBasics/02_Loops/while.cpp
+    TheBasics/03_StatementAndExpressions/SE.cpp
+    TheBasics/04_Constructor/constructor.cpp
+    TheBasics/05_Pointer/pointer-incr.cpp
+    TheBasics/06_Class/class.cpp
+    TheBasics/06_Class/struct-class.cpp
+    TheBasics/06_Class/rational.cpp
+    TheBasics/06_Class/accessors.cpp
+    TheBasics/07_Template/template-class.cpp
+    TheBasics/07_Template/template-function.cpp
+    TheBasics/08_STL/vector.cpp
+    TheBasics/08_STL/string.cpp
+    TheBasics/08_STL/iostream-file.cpp
+    TheBasics/08_STL/iostream-formatting.cpp
+)
 
-set_property(TARGET HelloWorld PROPERTY CXX_STANDARD 20)
-set_property(TARGET Loops1 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Loops2 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Loops3 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Loops4 PROPERTY CXX_STANDARD 20)
-set_property(TARGET SE PROPERTY CXX_STANDARD 20)
-set_property(TARGET Constructor PROPERTY CXX_STANDARD 20)
-set_property(TARGET Pointer PROPERTY CXX_STANDARD 20)
-set_property(TARGET Class1 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Class2 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Class3 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Class4 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Template1 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Template2 PROPERTY CXX_STANDARD 20)
-set_property(TARGET STL1 PROPERTY CXX_STANDARD 20)
-set_property(TARGET STL2 PROPERTY CXX_STANDARD 20)
-set_property(TARGET STL3 PROPERTY CXX_STANDARD 20)
-set_property(TARGET STL4 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design1 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design2 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design3 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design4 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design5 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design6 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design7 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design8 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design9 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design10 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design11 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design12 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design13 PROPERTY CXX_STANDARD 20)
-set_property(TARGET Design14 PROPERTY CXX_STANDARD 20)
+# Source files for DesignPattern
+set(DESIGNPATTERN_SOURCES
+    DesignPattern/01_Adapter/objectAdapter.cpp
+    DesignPattern/01_Adapter/classAdapter.cpp
+    DesignPattern/01_Adapter/cloudStorage.cpp
+    DesignPattern/02_Bridge/bridgeRefactor.cpp
+    DesignPattern/02_Bridge/vehiclesEngines.cpp
+    DesignPattern/03_Composite/boxesProducts.cpp
+    DesignPattern/04_Decorator/computershop.cpp
+    DesignPattern/04_Decorator/pizza.cpp
+    DesignPattern/05_Facade/hotelReservation.cpp
+    DesignPattern/05_Facade/weatherAPI.cpp
+    DesignPattern/06_Flyweight/sprites.cpp
+    DesignPattern/06_Flyweight/textEditor.cpp
+    DesignPattern/07_Proxy/readConfig.cpp
+    DesignPattern/07_Proxy/confidential.cpp
+)
+
+# Create executables for TheBasics
+foreach(source_file IN LISTS THEBASICS_SOURCES)
+    get_filename_component(target_name ${source_file} NAME_WE)
+    add_executable(${target_name}_TheBasics ${source_file})
+endforeach()
+
+# Create executables for DesignPattern
+foreach(source_file IN LISTS DESIGNPATTERN_SOURCES)
+    get_filename_component(target_name ${source_file} NAME_WE)
+    add_executable(${target_name}_DesignPattern ${source_file})
+endforeach()
