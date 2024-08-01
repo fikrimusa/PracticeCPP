@@ -1,5 +1,3 @@
-//  jump.cpp by Bill Weinman [bw.org]
-//  as of 2022-08-29
 #include <format>
 #include <iostream>
 #include <string>

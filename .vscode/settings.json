@@ -1,4 +1,8 @@
 {
-    "cmake.generator": "MinGW Makefiles"
+    "cmake.generator": "MinGW Makefiles",
+    "files.associations": {
+      "*.cpp": "cpp",
+      "format": "cpp"
+    }
   }
   

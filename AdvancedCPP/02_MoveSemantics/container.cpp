@@ -1,5 +1,3 @@
-// container.cpp by Bill Weinman [bw.org]
-// updated 2022-10-26
 #include <format>
 #include <string>
 #include <vector>

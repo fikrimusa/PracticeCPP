@@ -1,5 +1,3 @@
-// vector-test.cpp by Bill Weinman [bw.org]
-// version of 2022-10-26
 #include <format>
 #include <vector>
 #include <string>

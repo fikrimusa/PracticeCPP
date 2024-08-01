@@ -1,5 +1,3 @@
-// lambda-predicate.cpp by Bill Weinman [bw.org]
-// updated 2022-09-09
 #include <format>
 #include <algorithm>
 #include <vector>
