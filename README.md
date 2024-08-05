@@ -10,6 +10,16 @@ The **Practice CPP** project is designed to help you practice and improve your C
 
 - **TheBasics**: Contains basic C++ programming examples and exercises using C++20.
 - **DesignPattern**: Contains seven structural design patterns from the original design patterns book—adapter, bridge, composite, decorator, facade, flyweight, and proxy—and shows you how to implement each one in modern C++..
+- **AdvancedCPP**: Contains advanced C++ topics and new features in C++20:
+  - **operatoroverload**: Examples and exercises on operator overloading.
+  - **movesemantics**: Insights into move semantics and rvalue references.
+  - **lambdaexpressions**: Examples of lambda expressions and their uses.
+  - **constraintsandconcepts**: Coverage of constraints and concepts in C++20.
+  - **optionalsandvariants**: Usage of `std::optional` and `std::variant`.
+  - **concurrency**: Topics related to concurrency and multithreading.
+  - **otherssubjects**: Other advanced C++ topics not covered elsewhere.
+  - **othercppfeatures**: Other features introduced in C++20.
+  - **numword**: A project related to number-word conversion.
 
 ## Build Instructions
 
