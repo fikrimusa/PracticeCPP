@@ -70,6 +70,11 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/06_Concurrency/promise.cpp
     AdvancedCPP/06_Concurrency/sleep.cpp
     AdvancedCPP/06_Concurrency/thread.cpp
+    AdvancedCPP/07_OtherSubjects/chrono.cpp
+    AdvancedCPP/07_OtherSubjects/filesystem.cpp
+    AdvancedCPP/07_OtherSubjects/initialization.cpp
+    AdvancedCPP/07_OtherSubjects/rng.cpp
+    AdvancedCPP/07_OtherSubjects/struct-binding.cpp
 )
 
 # Create executables for TheBasics
