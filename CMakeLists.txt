@@ -1,102 +1,72 @@
-cmake_minimum_required(VERSION 3.30.1)
-project(PracticeCPP VERSION 0.1.0 LANGUAGES C CXX)
+cmake_minimum_required(VERSION 3.10)
+project(PracticeCPP VERSION 0.1.0 LANGUAGES CXX)
 
-# Set C++ standard for all targets
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_MESSAGE_LOG_LEVEL DEBUG)
 
-# Source files for TheBasics
-set(THEBASICS_SOURCES
-    TheBasics/01_HelloWorld/HelloWorld.cpp
-    TheBasics/02_Loops/for.cpp
-    TheBasics/02_Loops/range-for.cpp
-    TheBasics/02_Loops/switch.cpp
-    TheBasics/02_Loops/while.cpp
-    TheBasics/03_StatementAndExpressions/SE.cpp
-    TheBasics/04_Constructor/constructor.cpp
-    TheBasics/05_Pointer/pointer-incr.cpp
-    TheBasics/06_Class/class.cpp
-    TheBasics/06_Class/struct-class.cpp
-    TheBasics/06_Class/rational.cpp
-    TheBasics/06_Class/accessors.cpp
-    TheBasics/07_Template/template-class.cpp
-    TheBasics/07_Template/template-function.cpp
-    TheBasics/08_STL/vector.cpp
-    TheBasics/08_STL/string.cpp
-    TheBasics/08_STL/iostream-file.cpp
-    TheBasics/08_STL/iostream-formatting.cpp
+# Include directories
+include_directories(${CMAKE_SOURCE_DIR}/AdvancedCPP/09_Project_numword)
+
+# Function to create executables
+function(create_executables category)
+    foreach(src IN ITEMS ${ARGN})
+        # Skip files that need special handling
+        if(src MATCHES "numword\\.cpp$" OR src MATCHES "numword-test\\.cpp$")
+            continue()
+        endif()
+        
+        if(NOT IS_ABSOLUTE "${src}")
+            set(src "${CMAKE_CURRENT_SOURCE_DIR}/${src}")
+        endif()
+        
+        if(NOT EXISTS "${src}")
+            message(WARNING "Source file not found: ${src}")
+            continue()
+        endif()
+        
+        get_filename_component(target_name "${src}" NAME_WE)
+        set(full_target "${category}_${target_name}")
+        
+        add_executable(${full_target} "${src}")
+        message(STATUS "Created target: ${full_target}")
+        
+        target_compile_features(${full_target} PRIVATE cxx_std_20)
+    endforeach()
+endfunction()
+
+# Get source files
+file(GLOB_RECURSE THEBASICS_SOURCES TheBasics/*.cpp)
+file(GLOB_RECURSE DESIGNPATTERN_SOURCES DesignPattern/*.cpp)
+file(GLOB_RECURSE ADVANCEDCPP_SOURCES AdvancedCPP/*.cpp)
+
+# Create regular executables
+create_executables(TheBasics ${THEBASICS_SOURCES})
+create_executables(DesignPattern ${DESIGNPATTERN_SOURCES})
+create_executables(AdvancedCPP ${ADVANCEDCPP_SOURCES})
+
+# Handle numword as a library
+add_library(AdvancedCPP_numword STATIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/AdvancedCPP/09_Project_numword/numword.cpp
+)
+target_include_directories(AdvancedCPP_numword PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/AdvancedCPP/09_Project_numword
 )
 
-# Source files for DesignPattern
-set(DESIGNPATTERN_SOURCES
-    DesignPattern/01_Adapter/objectAdapter.cpp
-    DesignPattern/01_Adapter/classAdapter.cpp
-    DesignPattern/01_Adapter/cloudStorage.cpp
-    DesignPattern/02_Bridge/bridgeRefactor.cpp
-    DesignPattern/02_Bridge/vehiclesEngines.cpp
-    DesignPattern/03_Composite/boxesProducts.cpp
-    DesignPattern/04_Decorator/computershop.cpp
-    DesignPattern/04_Decorator/pizza.cpp
-    DesignPattern/05_Facade/hotelReservation.cpp
-    DesignPattern/05_Facade/weatherAPI.cpp
-    DesignPattern/06_Flyweight/sprites.cpp
-    DesignPattern/06_Flyweight/textEditor.cpp
-    DesignPattern/07_Proxy/readConfig.cpp
-    DesignPattern/07_Proxy/confidential.cpp
-)
+# Create numword-test executable with proper linking
+if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/AdvancedCPP/09_Project_numword/numword-test.cpp)
+    add_executable(AdvancedCPP_numword-test 
+        ${CMAKE_CURRENT_SOURCE_DIR}/AdvancedCPP/09_Project_numword/numword-test.cpp
+    )
+    target_link_libraries(AdvancedCPP_numword-test PRIVATE AdvancedCPP_numword)
+    target_compile_features(AdvancedCPP_numword-test PRIVATE cxx_std_20)
+    message(STATUS "Created special target: AdvancedCPP_numword-test")
+endif()
 
-# Source files for AdvancedCPP
-set(ADVANCECPP_SOURCES
-    AdvancedCPP/01_OperatorOverload/rational.cpp
-    AdvancedCPP/01_OperatorOverload/rational2.cpp
-    AdvancedCPP/01_OperatorOverload/incr-decr.cpp
-    AdvancedCPP/01_OperatorOverload/functor.cpp
-    AdvancedCPP/02_MoveSemantics/container.cpp
-    AdvancedCPP/02_MoveSemantics/container-02.cpp
-    AdvancedCPP/02_MoveSemantics/container-03.cpp
-    AdvancedCPP/02_MoveSemantics/vector-test.cpp
-    AdvancedCPP/03_LambdaExpressions/lambda-hello.cpp
-    AdvancedCPP/03_LambdaExpressions/lambda-capture.cpp
-    AdvancedCPP/03_LambdaExpressions/lambda-predicate.cpp
-    AdvancedCPP/03_LambdaExpressions/jump.cpp
-    AdvancedCPP/04_ConstraintsAndConcepts/constraints.cpp
-    AdvancedCPP/05_OptionalsAndVariants/any.cpp
-    AdvancedCPP/05_OptionalsAndVariants/optional.cpp
-    AdvancedCPP/05_OptionalsAndVariants/variant.cpp
-    AdvancedCPP/06_Concurrency/async.cpp
-    AdvancedCPP/06_Concurrency/atomic.cpp
-    AdvancedCPP/06_Concurrency/mutex.cpp
-    AdvancedCPP/06_Concurrency/producer-consumer.cpp
-    AdvancedCPP/06_Concurrency/promise.cpp
-    AdvancedCPP/06_Concurrency/sleep.cpp
-    AdvancedCPP/06_Concurrency/thread.cpp
-    AdvancedCPP/07_OtherSubjects/chrono.cpp
-    AdvancedCPP/07_OtherSubjects/filesystem.cpp
-    AdvancedCPP/07_OtherSubjects/initialization.cpp
-    AdvancedCPP/07_OtherSubjects/rng.cpp
-    AdvancedCPP/07_OtherSubjects/struct-binding.cpp
-    AdvancedCPP/08_OtherCPPFeatures/format.cpp
-    AdvancedCPP/08_OtherCPPFeatures/spaceship.cpp
-    AdvancedCPP/08_OtherCPPFeatures/spaceship-frac.cpp
-    AdvancedCPP/08_OtherCPPFeatures/span.cpp
-    AdvancedCPP/09_Project_numword/numword-test.cpp
-    AdvancedCPP/09_Project_numword/numword.cpp
-)
-
-# Create executables for TheBasics
-foreach(source_file IN LISTS THEBASICS_SOURCES)
-    get_filename_component(target_name ${source_file} NAME_WE)
-    add_executable(${target_name}_TheBasics ${source_file})
-endforeach()
-
-# Create executables for DesignPattern
-foreach(source_file IN LISTS DESIGNPATTERN_SOURCES)
-    get_filename_component(target_name ${source_file} NAME_WE)
-    add_executable(${target_name}_DesignPattern ${source_file})
-endforeach()
-
-# Create executables for AdvancedCPP
-foreach(source_file IN LISTS ADVANCECPP_SOURCES)
-    get_filename_component(target_name ${source_file} NAME_WE)
-    add_executable(${target_name}_AdvancedCPP ${source_file})
+# Print all targets
+get_property(all_targets DIRECTORY PROPERTY BUILDSYSTEM_TARGETS)
+message(STATUS "=== Total targets created: ===")
+foreach(t ${all_targets})
+    get_target_property(target_type ${t} TYPE)
+    message(STATUS "  - ${t} (${target_type})")
 endforeach()

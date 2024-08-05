@@ -1,5 +1,6 @@
 #ifndef _NUMWORD_H
 #define _NUMWORD_H
+
 #include <string>
 #include <string_view>
 #include <memory>
@@ -7,11 +8,11 @@
 namespace bw {
     using std::string;
     using std::string_view;
-    using numnum = uint64_t;    // yummy numbers
+    using numnum = uint64_t;    // Yummy numbers
     using bufstr = std::unique_ptr<string>;
     constexpr const char* _version{ "2022.09.06" };
-    
-    // maxnum is nine hundred ninety-nine quadrillion nine hundred ninety-nine trillion
+
+    // Max number is nine hundred ninety-nine quadrillion nine hundred ninety-nine trillion
     // nine hundred ninety-nine billion nine hundred ninety-nine million
     // nine hundred ninety-nine thousand nine hundred ninety-nine
     constexpr numnum maxnum = 999'999'999'999'999'999;
@@ -25,7 +26,7 @@ namespace bw {
     constexpr numnum thousand{ 1000 };
 
     constexpr string_view errnum{ "error" };
-    
+
     constexpr string_view _singles[] {
         "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"
     };
@@ -35,7 +36,7 @@ namespace bw {
     };
 
     constexpr string_view _tens[] {
-        errnum, errnum, "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety",
+        errnum, errnum, "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"
     };
 
     constexpr string_view _hundred_string = "hundred";
@@ -53,7 +54,7 @@ namespace bw {
         bool _hyphen_flag {false};
         
         void clearbuf();
-        size_t bufsize();
+        size_t bufsize() const;
         void appendbuf(const string& s);
         void appendbuf(const string_view& s);
         void appendbuf(const char c);
@@ -66,10 +67,10 @@ namespace bw {
         const char* version() const { return _version; }
         void setnum(const numnum& num) { _num = num; }
         numnum getnum() const { return _num; }
-        numnum operator= (const numnum& num);
+        numword& operator=(const numnum& num);  // Return reference to self
         const string& words();
         const string& words(const numnum& num);
-        const string& operator() (const numnum& num) { return words(num); };
+        const string& operator() (const numnum& num) { return words(num); }
     };
 
 }   // namespace bw
