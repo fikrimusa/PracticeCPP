@@ -9,7 +9,7 @@ constexpr void print(const std::string_view str_fmt, auto&&... args) {
 template<>
 struct std::formatter<bw::numword>: std::formatter<unsigned> {
     template<typename FormatContext>
-    auto format(const bw::numword& nw, FormatContext& ctx) {
+    auto format(const bw::numword& nw, FormatContext& ctx) const{
         bw::numword _nw{nw};
         return format_to(ctx.out(), "{}", _nw.words());
     }

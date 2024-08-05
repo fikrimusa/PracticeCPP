@@ -1,9 +1,21 @@
-cmake_minimum_required(VERSION 3.30.1)
+cmake_minimum_required(VERSION 3.10)
 project(PracticeCPP VERSION 0.1.0 LANGUAGES C CXX)
 
 # Set C++ standard for all targets
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Specify the include directories
+include_directories(${CMAKE_SOURCE_DIR}/AdvancedCPP/09_Project_numword)
+
+# Function to create executables
+function(create_executables target_prefix sources)
+    foreach(source_file IN LISTS ${sources})
+        get_filename_component(target_name ${source_file} NAME_WE)
+        add_executable(${target_prefix}_${target_name} ${source_file})
+        target_compile_features(${target_prefix}_${target_name} PRIVATE cxx_std_20)
+    endforeach()
+endfunction()
 
 # Source files for TheBasics
 set(THEBASICS_SOURCES
@@ -79,24 +91,19 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/08_OtherCPPFeatures/spaceship.cpp
     AdvancedCPP/08_OtherCPPFeatures/spaceship-frac.cpp
     AdvancedCPP/08_OtherCPPFeatures/span.cpp
-    AdvancedCPP/09_Project_numword/numword-test.cpp
     AdvancedCPP/09_Project_numword/numword.cpp
+    AdvancedCPP/09_Project_numword/numword-test.cpp
 )
 
 # Create executables for TheBasics
-foreach(source_file IN LISTS THEBASICS_SOURCES)
-    get_filename_component(target_name ${source_file} NAME_WE)
-    add_executable(${target_name}_TheBasics ${source_file})
-endforeach()
+create_executables(TheBasics ${THEBASICS_SOURCES})
 
 # Create executables for DesignPattern
-foreach(source_file IN LISTS DESIGNPATTERN_SOURCES)
-    get_filename_component(target_name ${source_file} NAME_WE)
-    add_executable(${target_name}_DesignPattern ${source_file})
-endforeach()
+create_executables(DesignPattern ${DESIGNPATTERN_SOURCES})
 
-# Create executables for AdvancedCPP
-foreach(source_file IN LISTS ADVANCECPP_SOURCES)
-    get_filename_component(target_name ${source_file} NAME_WE)
-    add_executable(${target_name}_AdvancedCPP ${source_file})
-endforeach()
+# Create executable specifically for numword
+add_executable(numword_AdvancedCPP
+    AdvancedCPP/09_Project_numword/numword.cpp
+    AdvancedCPP/09_Project_numword/numword-test.cpp
+)
+target_compile_features(numword_AdvancedCPP PRIVATE cxx_std_20)

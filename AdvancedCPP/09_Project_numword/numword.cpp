@@ -2,18 +2,18 @@
 
 namespace bw {
 
-// assignment operator
-numnum numword::operator= (const numnum& num) {
+// Assignment operator
+numword& numword::operator=(const numnum& num) {
     setnum(num);
-    return getnum();
+    return *this;
 }
 
 const string& numword::words() {
     return words(_num);
 }
 
-// convert to words
-const string& numword::words( const numnum& num ) {
+// Convert to words
+const string& numword::words(const numnum& num) {
     numnum n{ num };
     clearbuf();
 
@@ -27,41 +27,40 @@ const string& numword::words( const numnum& num ) {
         return *_buf;
     }
 
-    // powers of 1000
+    // Powers of 1000
     if (n >= thousand) {
         for (auto i = five_i; i > zero_i; --i) {
-                numnum power {pow_i(thousand, i)};
-                numnum _n {( n - ( n % power ) ) / power};
-                if (_n) {
-                    int index = i;
-                    numword _nw {_n};
-                    appendbuf(_nw.words());
-                    appendbuf(_powers[index]);
-                    n -= _n * power;
-                }
+            numnum power {pow_i(thousand, i)};
+            numnum chunk {(n - (n % power)) / power};
+            if (chunk) {
+                numword nw {chunk};
+                appendbuf(nw.words());
+                appendbuf(_powers[i]);
+                n -= chunk * power;
+            }
         }
     }
-    // hundreds
+    // Hundreds
     if (n >= hundred && n < thousand) {
-        numnum _n {( n - ( n % hundred ) ) / hundred};
-        numword _nw {_n};
-        appendbuf(_nw.words());
+        numnum chunk {(n - (n % hundred)) / hundred};
+        numword nw {chunk};
+        appendbuf(nw.words());
         appendbuf(_hundred_string);
-        n -= _n * hundred;
+        n -= chunk * hundred;
     }
-    // tens
+    // Tens
     if (n >= twenty && n < hundred) {
-        numnum _n {( n - ( n % ten ) ) / ten};
-        appendbuf(_tens[_n]);
-        n -= _n * ten;
+        numnum chunk {(n - (n % ten)) / ten};
+        appendbuf(_tens[chunk]);
+        n -= chunk * ten;
         _hyphen_flag = true;
     }
-    // teens
+    // Teens
     if (n >= ten && n < twenty) {
         appendbuf(_teens[n - ten]);
         n = zero;
     }
-    // singles
+    // Singles
     if (n > zero && n < ten) {
         appendbuf(_singles[n]);
     }
@@ -69,18 +68,14 @@ const string& numword::words( const numnum& num ) {
     return *_buf;
 }
 
-// MARK: - private methods
+// MARK: - Private Methods
 
-// reset the buffer
+// Reset the buffer
 void numword::clearbuf() {
     *_buf = string {};
 }
 
-size_t numword::bufsize() {
-    return _buf->size();
-}
-
-// append text to the string buffer
+// Append text to the string buffer
 void numword::appendbuf(const string& s) {
     appendspace();
     _buf->append(s);
@@ -88,14 +83,14 @@ void numword::appendbuf(const string& s) {
 
 void numword::appendbuf(const string_view& s) {
     appendspace();
-    _buf->append(s.data());
+    _buf->append(s.data(), s.size());
 }
 
 void numword::appendbuf(const char c) {
     _buf->append(1, c);
 }
 
-// append space (or hyphen)
+// Append space (or hyphen)
 void numword::appendspace() {
     if (bufsize()) {
         appendbuf(_hyphen_flag ? _hyphen : _space);
@@ -103,10 +98,15 @@ void numword::appendspace() {
     }
 }
 
-numnum numword::pow_i(const numnum n, numnum p) {
-    numnum out {n};
-    while (--p) out *= n;
-    return out;
+numnum numword::pow_i(const numnum base, numnum exp) {
+    numnum result {1};
+    while (exp--) result *= base;
+    return result;
+}
+
+// Add the bufsize() definition
+size_t numword::bufsize() const {
+    return _buf->size();
 }
 
 } // namespace bw
