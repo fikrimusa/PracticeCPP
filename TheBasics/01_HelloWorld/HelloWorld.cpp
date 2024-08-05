@@ -1,14 +1,8 @@
-#include<iostream>
-#include<vector>
-#include<string>
+#include <iostream>
+#include <format>  // For std::format in C++20
 
-using namespace std;
-
-int main(){
-    vector<string> msg {"Yes", "You", "Did", "It!"};
-
-    for(const string& word : msg){
-        cout << word << " ";
-    }
-    cout << endl;
+int main() {
+    // Using std::format to print "Hello, World!" with C++20
+    std::cout << std::format("Hello, World!\n");
+    return 0;
 }
