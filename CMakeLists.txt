@@ -79,6 +79,8 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/08_OtherCPPFeatures/spaceship.cpp
     AdvancedCPP/08_OtherCPPFeatures/spaceship-frac.cpp
     AdvancedCPP/08_OtherCPPFeatures/span.cpp
+    AdvancedCPP/09_Project_numword/numword-test.cpp
+    AdvancedCPP/09_Project_numword/numword.cpp
 )
 
 # Create executables for TheBasics
