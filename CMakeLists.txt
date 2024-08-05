@@ -75,6 +75,10 @@ set(ADVANCECPP_SOURCES
     AdvancedCPP/07_OtherSubjects/initialization.cpp
     AdvancedCPP/07_OtherSubjects/rng.cpp
     AdvancedCPP/07_OtherSubjects/struct-binding.cpp
+    AdvancedCPP/08_OtherCPPFeatures/format.cpp
+    AdvancedCPP/08_OtherCPPFeatures/spaceship.cpp
+    AdvancedCPP/08_OtherCPPFeatures/spaceship-frac.cpp
+    AdvancedCPP/08_OtherCPPFeatures/span.cpp
 )
 
 # Create executables for TheBasics
